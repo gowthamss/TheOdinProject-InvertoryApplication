@@ -16,8 +16,15 @@ const itemSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Category',
         required: true,
-        price: Number,
-        number_in_stock: Number
+    },
+    price: {
+        type: Number,
+        required: true
+    },
+    number_in_stock: {
+        type: Number,
+        required: true,
+        default: 0
     }
 });
 

@@ -12,7 +12,8 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 // Database connection
-const mongoDB = process.env.DB_CONNECTION_STRING;
+const dev_db_url = 'mongodb+srv://gowthamss:ZimM5eYH6fmRVfoc@theinventoryapplication.raets.mongodb.net/inventoryApplication?retryWrites=true&w=majority';
+const mongoDB = dev_db_url;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error'));

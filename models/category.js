@@ -14,6 +14,11 @@ const categorySchema = new Schema({
         type: String,
         required: true,
         maxlength: 256
+    },
+    department: {
+        type: Schema.Types.ObjectId,
+        ref: 'Department',
+        required: true
     }
 });
 

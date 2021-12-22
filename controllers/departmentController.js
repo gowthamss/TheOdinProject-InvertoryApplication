@@ -1,18 +1,53 @@
 const Department = require('../models/department');
+const Category = require('../models/category');
 
+const async = require('async');
 
 exports.index = (req, res, next) => {
-    res.send('Department list not implemented yet');
+    // Department.find()
+    //     .exec(function(err, departments) {
+    //         if (err) { return next(err); }
+
+    //         // Success, so render view
+    //         res.render('index', { title: 'Departments', departments: departments });
+    //     });
+    res.redirect('/inventory/departments');
 }
 
 // Display list of departments
 exports.department_list = (req, res, next) => {
-    res.send('Department list not implemented yet');
+    Department.find()
+        .exec(function(err, departments) {
+            if (err) { return next(err); }
+
+            // Success, so render view
+            res.render('department_list', { title: 'Departments', departments: departments });
+        });
 }
 
 // Display list of departments
 exports.department_detail = (req, res, next) => {
-    res.send('Department list not implemented yet');
+    async.parallel({
+            department: function(callback) {
+                Department.findById(req.params.id).exec(callback);
+            },
+            department_categories: function(callback) {
+                Category.find({ department: req.params.id }).exec(callback);
+            }
+        },
+        function(err, results) {
+            if (err) { return next(err); }
+
+            if (results.department === null) {
+                var err = new Error('Department not found');
+                err.status = 404;
+                return next(err);
+            }
+
+            // Success, so render department detail with categories
+            res.render('department_detail', { title: 'Department Categories', department: results.department, department_categories: results.department_categories });
+        }
+    );
 }
 
 // Display create get form of departments

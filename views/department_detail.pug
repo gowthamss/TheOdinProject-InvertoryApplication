@@ -1,0 +1,14 @@
+extends layout 
+
+block content 
+    h1= title 
+
+    div(class='category--list') 
+        h3 #{department.name}
+        each department_category in department_categories
+            div(class='category') 
+                a(href=department_category.url) #{department_category.name}
+                p #{department_category.description}
+
+        else 
+            p There are no categories

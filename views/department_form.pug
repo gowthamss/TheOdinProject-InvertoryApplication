@@ -1,0 +1,18 @@
+extends layout 
+
+block content 
+
+
+    h1= title 
+
+    form(method='POST', action='')
+        div.form-group
+            label(for='department_name') Department Name:
+            input#department_name.form-control(type='text', placeholder='Enter department name', name='department_name', required='true', value=(department===undefined ? '' : department.name))
+
+        button.btn.btn-primary(type='submit') Create
+
+    if errors 
+        ul 
+            for error in errors 
+                li!= error.msg

@@ -7,6 +7,9 @@ block content
     each department in departments 
       a(href=department.url, class='text-decoration-none') #{department.name}
     else 
-      p There are no departments      
+      p There are no departments  
+
+
+  a(href='/inventory/departments/create') Create Department    
 
 

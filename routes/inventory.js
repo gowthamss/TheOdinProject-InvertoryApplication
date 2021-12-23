@@ -13,10 +13,10 @@ const item_controller = require('../controllers/itemController');
 router.get('/', department_controller.index);
 
 // GET request for creating a Department. NOTE This must come before routes that display Department (uses id).
-router.get('/department/create', department_controller.department_create_get);
+router.get('/departments/create', department_controller.department_create_get);
 
 // POST request for creating Department
-router.post('/department/create', department_controller.department_create_post);
+router.post('/departments/create', department_controller.department_create_post);
 
 // GET request for deleting Department
 router.get('/department/:id/delete', department_controller.department_delete_get);

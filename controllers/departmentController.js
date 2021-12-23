@@ -2,6 +2,7 @@ const Department = require('../models/department');
 const Category = require('../models/category');
 
 const async = require('async');
+const { body, validationResult } = require('express-validator');
 
 exports.index = (req, res, next) => {
     // Department.find()
@@ -52,13 +53,36 @@ exports.department_detail = (req, res, next) => {
 
 // Display create get form of departments
 exports.department_create_get = (req, res, next) => {
-    res.send('Department create get not implemented yet');
+    res.render('department_form', { title: 'Create Department' });
 }
 
 // Display create post form of departments
-exports.department_create_post = (req, res, next) => {
-    res.send('Department create post not implemented yet');
-}
+exports.department_create_post = [
+    // Validate and Sanitize fields
+    body('department_name').trim().isLength({ min: 3 }).escape().withMessage('Department name must be specified'),
+    (req, res, next) => {
+        // Extract the validation errors from the request
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            // There are errors, so render the form with validation errors
+            res.render('department_form', { title: 'Create Department', department: req.body, errors: errors.array() });
+        } else {
+            // Data from form is valid
+            // Create department object with sanitized and trimmed data
+            var department = new Department({
+                name: req.body.department_name
+            });
+
+            department.save(function(err) {
+                if (err) { return next(err); }
+
+                // Successful, so redirect to departments
+                res.redirect('/inventory/departments');
+            })
+        }
+    }
+];
 
 // Display delete get form of departments
 exports.department_delete_get = (req, res, next) => {

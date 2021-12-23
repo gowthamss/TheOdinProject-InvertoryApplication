@@ -188,7 +188,7 @@ function createItems(cb) {
                 itemCreate(
                     `Nobody's Magic`,
                     `"With Nobody's Magic, Destiny Birdsong has given us a devastatingly beautiful, sexy, searing gift. These are stunning, irresistible stories of Southern Black womanhood that I will return to again and again."—Deesha Philyaw, National Book Award finalist for The Secret Lives of Church Ladies`,
-                    categories[2],
+                    categories[6],
                     28,
                     11,
                     callback
@@ -208,7 +208,7 @@ function createItems(cb) {
                 itemCreate(
                     `Angel Frock`,
                     `A beautifully designed wedding frock for the bride.`,
-                    categories[1],
+                    categories[3],
                     295,
                     1,
                     callback

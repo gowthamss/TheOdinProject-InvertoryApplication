@@ -1,14 +1,41 @@
 const Category = require('../models/category');
+const Item = require('../models/item');
 
+const async = require('async');
 
 // Display list of categorys
 exports.category_list = (req, res, next) => {
-    res.send('category list not implemented yet');
+    Category.find().exec(function(err, categories) {
+        if (err) { return next(err); }
+
+        // Success, so render category list
+        res.render('category_list', { title: 'All Categories', categories: categories });
+    });
 }
 
 // Display list of categorys
 exports.category_detail = (req, res, next) => {
-    res.send('category list not implemented yet');
+    async.parallel({
+            category: function(callback) {
+                Category.findById(req.params.id).exec(callback);
+            },
+            category_items: function(callback) {
+                Item.find({ category: req.params.id }).exec(callback);
+            }
+        },
+        function(err, results) {
+            if (err) { return next(err); }
+
+            if (results.category === null) {
+                var err = new Error('Category not found');
+                err.status = 404;
+                return next(err);
+            }
+
+            // Success, so render items
+            res.render('category_detail', { title: 'Items', category: results.category, category_items: results.category_items });
+        }
+    );
 }
 
 // Display create get form of categorys

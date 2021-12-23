@@ -1,0 +1,16 @@
+extends layout 
+
+block content 
+
+    h1= title 
+
+    div(class='item--list')
+        each item in items 
+            div(class='item')
+                b #{item.category.name}
+                h5 #{item.name}
+                p #[strong Description]: #{item.description}
+                span #[strong Price]: $#{item.price}
+                span #[strong Units in stock]: #{item.number_in_stock}
+        else 
+            p There are no items in this category

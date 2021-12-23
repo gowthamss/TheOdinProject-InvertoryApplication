@@ -3,7 +3,12 @@ const Item = require('../models/item');
 
 // Display list of items
 exports.item_list = (req, res, next) => {
-    res.send('item list not implemented yet');
+    Item.find().populate('category').exec(function(err, items) {
+        if (err) { return next(err); }
+
+        // Success, so render all items
+        res.render('item_list', { title: 'All Items', items: items });
+    })
 }
 
 // Display list of items

@@ -1,0 +1,14 @@
+extends layout 
+
+block content 
+
+    h1= title 
+
+    div(class='categories')
+        each category in categories 
+            div(class='category')
+                a(href=category.url, class='text-decoration-none') #{category.name}
+                p #{category.description}
+
+        else 
+            p There are no categories

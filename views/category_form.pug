@@ -17,13 +17,12 @@ block content
             label(for='category_department') Department:
             select#category_department.form-control(type='select', placeholder='Select Department', name='category_department', required='true')                
                 for department in departments
-                    //- if department 
-                    //-     option(value=department._id, selected=(department._id.toString() == category.department._id || department._id.toString() == category.department) ? 'selected' : false) #{department.name}
-                    //- else 
-                    //-     option(value=department._id) #{department.name} 
-                    option(value=department._id) #{department.name} 
+                    if category 
+                        option(value=department._id, selected=(department._id.toString() == category.department._id || department._id.toString() == category.department) ? 'selected' : false) #{department.name}
+                    else 
+                        option(value=department._id) #{department.name} 
 
-        button.btn.btn-primary(type='submit') Create
+        button.btn.btn-primary(type='submit') Submit
 
     if errors
         ul

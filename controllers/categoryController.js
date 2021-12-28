@@ -98,10 +98,69 @@ exports.category_delete_post = (req, res, next) => {
 
 // Display update get form of categorys
 exports.category_update_get = (req, res, next) => {
-    res.send('category create get not implemented yet');
+    async.parallel({
+            category: function(callback) {
+                Category.findById(req.params.id).populate('department').exec(callback);
+            },
+            departments: function(callback) {
+                Department.find().exec(callback);
+            }
+        },
+        function(err, results) {
+            if (err) { return next(err); }
+
+            // Success, so render the form as GET
+            res.render('category_form', { title: 'Update Category', departments: results.departments, category: results.category });
+        }
+    )
 }
 
 // Display update post form of categorys
-exports.category_update_post = (req, res, next) => {
-    res.send('category update post not implemented yet');
-}
+exports.category_update_post = [
+    // Validate and Sanitize fields
+    body('category_name', 'Category Name must not be empty').trim().isLength({ min: 1 }).escape(),
+    body('category_description', 'Description must not be empty').trim().isLength({ min: 1 }).escape(),
+    body('category_department', 'Department must not be empty').trim().isLength({ min: 1 }).escape(),
+    (req, res, next) => {
+        // Process request after validation and sanitization
+        const errors = validationResult(req);
+
+
+
+        if (!errors.isEmpty()) {
+            // There are errors, so render the form with filled data
+            async.parallel({
+                    category: function(callback) {
+                        Category.findById(req.params.id).populate('department').exec(callback);
+                    },
+                    departments: function(callback) {
+                        Department.find().exec(callback);
+                    }
+                },
+                function(err, results) {
+                    if (err) { return next(err); }
+
+                    // Success, so render the form as GET
+                    res.render('category_form', { title: 'Update Category', departments: results.departments, category: results.category });
+                }
+            );
+            return;
+        } else {
+            // Create category object
+            var category = new Category({
+                _id: req.params.id,
+                name: req.body.category_name,
+                description: req.body.category_description,
+                department: req.body.category_department
+            });
+
+            // Data from form is valid
+            Category.findByIdAndUpdate(req.params.id, category, {}, function(err, thecategory) {
+                if (err) { return next(err); }
+
+                // Success, so redice to all categories page
+                res.redirect('/inventory/category/' + category._id);
+            })
+        }
+    }
+];

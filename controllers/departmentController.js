@@ -86,7 +86,7 @@ exports.department_create_post = [
 
 // Display delete get form of departments
 exports.department_delete_get = (req, res, next) => {
-    res.send('Department create get not implemented yet');
+    res.render('ddfdf')
 }
 
 // Display delete post form of departments
@@ -96,10 +96,38 @@ exports.department_delete_post = (req, res, next) => {
 
 // Display update get form of departments
 exports.department_update_get = (req, res, next) => {
-    res.send('Department create get not implemented yet');
+    Department.findById(req.params.id).exec(function(err, department) {
+        if (err) { return next(err); }
+
+        // Success, so render the form as GET with department name
+        res.render('department_form', { title: 'Update Department', department: department });
+    })
 }
 
 // Display update post form of departments
-exports.department_update_post = (req, res, next) => {
-    res.send('Department update post not implemented yet');
-}
+exports.department_update_post = [
+    // Validate and Sanitize fields
+    body('department_name').trim().isLength({ min: 3 }).escape().withMessage('Department name must be specified'),
+    (req, res, next) => {
+        // Validate and sanitize input
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            // There are errors, so render the form as GET
+            res.render('department_form', { title: 'Update Department', department: req.body, errors: errors.array() });
+        } else {
+            // Data from form is valid
+            var department = new Department({
+                name: req.body.department_name,
+                _id: req.params.id
+            });
+
+            Department.findByIdAndUpdate(req.params.id, department, {}, function(err, thedepartment) {
+                if (err) { return next(err); }
+
+                // Success, so redirect to all departments
+                res.redirect('/inventory/departments');
+            })
+        }
+    }
+];

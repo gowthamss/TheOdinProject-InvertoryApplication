@@ -1,0 +1,31 @@
+extends layout 
+
+block content 
+
+    h1= title 
+
+    form(method='POST', action='')
+        div.form-group
+            label(for='category_name') Category Name:
+            input#category_name.form-control(type='text', placeholder='Enter category name', name='category_name', required='true', value=(undefined===category?'':category.name))
+
+        div.form-group
+            label(for='category_description') Description:
+            input#category_description.form-control(type='text', placeholder='Enter description', name='category_description', required='true', value=(undefined===category?'':category.description))
+
+        div.form-group
+            label(for='category_department') Department:
+            select#category_department.form-control(type='select', placeholder='Select Department', name='category_department', required='true')                
+                for department in departments
+                    //- if department 
+                    //-     option(value=department._id, selected=(department._id.toString() == category.department._id || department._id.toString() == category.department) ? 'selected' : false) #{department.name}
+                    //- else 
+                    //-     option(value=department._id) #{department.name} 
+                    option(value=department._id) #{department.name} 
+
+        button.btn.btn-primary(type='submit') Create
+
+    if errors
+        ul
+        for error in errors
+            li!= error.msg

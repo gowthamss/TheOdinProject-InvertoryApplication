@@ -10,7 +10,7 @@ block content
             label(for='department_name') Department Name:
             input#department_name.form-control(type='text', placeholder='Enter department name', name='department_name', required='true', value=(department===undefined ? '' : department.name))
 
-        button.btn.btn-primary(type='submit') Create
+        button.btn.btn-primary(type='submit') Submit
 
     if errors 
         ul 

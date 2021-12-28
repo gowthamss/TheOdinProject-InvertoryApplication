@@ -86,12 +86,54 @@ exports.department_create_post = [
 
 // Display delete get form of departments
 exports.department_delete_get = (req, res, next) => {
-    res.render('ddfdf')
+    async.parallel({
+            department: function(callback) {
+                Department.findById(req.params.id).exec(callback);
+            },
+            department_categories: function(callback) {
+                Category.find({ department: req.params.id }).exec(callback);
+            }
+        },
+        function(err, results) {
+            if (err) { return next(err); }
+
+            if (results.department == null) {
+                res.redirect('/inventory/departments');
+                return;
+            }
+            res.render('department_delete', { title: 'Delete Department', department: results.department, department_categories: results.department_categories });
+        }
+    );
 }
 
 // Display delete post form of departments
 exports.department_delete_post = (req, res, next) => {
-    res.send('Department delete post not implemented yet');
+    async.parallel({
+            department: function(callback) {
+                Department.findById(req.params.id).exec(callback);
+            },
+            department_categories: function(callback) {
+                Category.find({ department: req.params.id }).exec(callback);
+            }
+        },
+        function(err, results) {
+            if (err) { return next(err); }
+
+            if (results.department_categories.length > 0) {
+                // Department has categories. So render the form with available categories
+                res.render('department_delete', { title: 'Delete Department', department: results.department, department_categories: results.department_categories });
+                return;
+            } else {
+                // Department has no categories. So delete it and redirect to all departments
+                Department.findByIdAndRemove(req.body.departmentid, function deleteDepartment(err) {
+                    if (err) { return next(err); }
+
+                    res.redirect('/inventory/departments');
+                })
+
+            }
+        }
+    );
 }
 
 // Display update get form of departments

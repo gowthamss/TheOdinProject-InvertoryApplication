@@ -1,0 +1,14 @@
+extends layout 
+
+block content 
+
+    h1= title 
+
+    div(class='item')
+        b #{item.name}
+        p #[strong Description]: #{item.description}
+        span #[strong Price]: #{item.price}
+        span #[strong Units in stock]: #{item.number_in_stock}
+
+    a(href=item.url+'/update') Update item
+    a(href=item.url+'/delete') Delete item

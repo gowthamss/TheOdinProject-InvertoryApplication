@@ -4,7 +4,7 @@ block content
 
     h1= title 
 
-    form(method='POST', action='')
+    form(method='POST', action='', enctype="multipart/form-data")
         div.form-group
             label(for='item_name')
             input#item_name.form-control(type='text', placeholder='Enter item name', name='item_name', value=(item===undefined?'':item.name))
@@ -13,21 +13,28 @@ block content
             label(for='item_category')
             select#item_category.form-control(type='text', required='true', name='item_category')
                 for category in categories 
-                    option(value=category._id) #{category.name}
+                    if item 
+                        option(value=category._id, selected=(category._id.toString()==item.category._id || category._id.toString()== item.category) ? 'selected' : false) #{category.name}
+                    else
+                        option(value=category._id) #{category.name}
 
         div.form-group
             label(for='item_price')
-            input#item_price.form-control(type='text', placeholder='Enter item price', name='item_price', value=(item===undefined?'':item.price))
+            input#item_price.form-control(type='number', placeholder='Enter item price', name='item_price', value=(item===undefined?'':item.price))
             
         div.form-group
             label(for='item_units_in_stock')
-            input#item_units_in_stock.form-control(type='text', placeholder='Enter item units in stock', name='item_units_in_stock', value=(item===undefined?'':item.number_in_stock))
+            input#item_units_in_stock.form-control(type='number', placeholder='Enter item units in stock', name='item_units_in_stock', value=(item===undefined?'':item.number_in_stock))
 
         div.form-group
             label(for='item_description')
             input#item_description.form-control(type='text', placeholder='Enter item description', name='item_description', value=(item===undefined?'':item.description))
 
-        button.btn.btn-primary(type='submit') Create
+        div.form-group
+            label(for='item_image')
+            input#item_image.form-control(type='file', name='item_image')
+
+        button.btn.btn-primary(type='submit') Submit
 
     if errors
         ul

@@ -1,0 +1,23 @@
+extends layout 
+
+block content 
+    h1= title 
+
+    if department_categories.length
+        p #[strong Delete the following categories before deleting the department]
+
+        div(style='margin-left:20px;margin-top:20px')
+            h4 Categories
+            
+            dl
+            each category in department_categories
+                dt 
+                    a(href=category.url) #{category.name}
+                dd #{category.description}
+
+    else 
+        p Do you really want to delete this department?
+        form(method='POST', action='')
+            div.form-group
+                input#departmentid.form-control(type='hidden', name='departmentid', required='true', value=department._id)
+            button.btn.btn-danger(type='submit') Delete

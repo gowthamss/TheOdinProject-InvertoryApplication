@@ -25,7 +25,7 @@ const itemSchema = new Schema({
         type: Number,
         required: true,
         default: 0
-    }
+    },
 });
 
 // Virtual for URL

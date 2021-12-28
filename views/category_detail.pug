@@ -9,7 +9,7 @@ block content
 
         each category_item in category_items
             div(class='item')
-                h5 #{category_item.name}
+                a(href=category_item.url) #{category_item.name}
                 p #[strong Description]: #{category_item.description}
                 span #[strong Price]: #{category_item.price}
                 span #[strong Units in stock]: #{category_item.number_in_stock}
@@ -18,3 +18,4 @@ block content
 
     a(href='/inventory/item/create') Create New Item
     a(href=category.url+'/update') Update Category
+    a(href=category.url+'/delete') Delete Category

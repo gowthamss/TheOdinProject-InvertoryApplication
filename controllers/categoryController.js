@@ -88,12 +88,54 @@ exports.category_create_post = [
 
 // Display delete get form of categorys
 exports.category_delete_get = (req, res, next) => {
-    res.send('category create get not implemented yet');
+    async.parallel({
+            category: function(callback) {
+                Category.findById(req.params.id).exec(callback);
+            },
+            category_items: function(callback) {
+                Item.find({ category: req.params.id }).exec(callback);
+            }
+        },
+        function(err, results) {
+            if (err) { return next(err); }
+
+            if (results.category == null) {
+                res.redirect('/inventory/categories');
+                return;
+            }
+            res.render('category_delete', { title: 'Delete Category', category: results.category, category_items: results.category_items });
+        }
+    );
 }
 
 // Display delete post form of categorys
 exports.category_delete_post = (req, res, next) => {
-    res.send('category delete post not implemented yet');
+    async.parallel({
+            category: function(callback) {
+                Category.findById(req.params.id).exec(callback);
+            },
+            category_items: function(callback) {
+                Item.find({ category: req.params.id }).exec(callback);
+            }
+        },
+        function(err, results) {
+            if (err) { return next(err); }
+
+            if (results.category_items.length > 0) {
+                // There are items in the category. So render the form with available items
+                res.render('category_delete', { title: 'Delete Category', category: results.category, category_items: results.category_items });
+                return;
+            } else {
+                Category.findByIdAndRemove(req.body.categoryid, function(err) {
+                    if (err) { return next(err); }
+
+                    // Redict to categories
+                    res.redirect('/inventory/categories');
+                });
+            }
+
+        }
+    );
 }
 
 // Display update get form of categorys
@@ -125,8 +167,6 @@ exports.category_update_post = [
         // Process request after validation and sanitization
         const errors = validationResult(req);
 
-
-
         if (!errors.isEmpty()) {
             // There are errors, so render the form with filled data
             async.parallel({
@@ -141,7 +181,7 @@ exports.category_update_post = [
                     if (err) { return next(err); }
 
                     // Success, so render the form as GET
-                    res.render('category_form', { title: 'Update Category', departments: results.departments, category: results.category });
+                    res.render('category_form', { title: 'Update Category', departments: results.departments, category: results.category, errors: errors.array() });
                 }
             );
             return;
